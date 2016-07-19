@@ -4,7 +4,7 @@
 
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Attractions</h1>
+<h1>Listing Attractions (<%= @attractions.count %>) </h1>
 
 <table>
   <thead>
@@ -21,12 +21,10 @@
   <tbody>
     <% @attractions.each do |attraction| %>
       <tr>
-        <td><%= attraction.name %></td>
+        <td><%= link_to attraction.name, attraction.link, :target => "_blank" %></td>
         <td><%= attraction.type %></td>
-        <td><%= attraction.link %></td>
         <td><%= attraction.latitude %></td>
         <td><%= attraction.longitude %></td>
-        <td><%= link_to 'Show', attraction %></td>
         <td><%= link_to 'Edit', edit_attraction_path(attraction) %></td>
         <td><%= link_to 'Destroy', attraction, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
@@ -35,8 +33,6 @@
 </table>
 
 <br>
-
-<%= link_to 'New Attraction', new_attraction_path %>
 
 <div style='width: 800px;'>
   <div id="map" style='width: 1250px; height: 600px;'></div>
@@ -51,7 +47,4 @@
   });
 </script>
 
-<% @attractions.each do |attraction| %>
-  <%= attraction.name + ", " + attraction.latitude.to_s + ", " + attraction.longitude.to_s %>
-  </br>
-<% end %>
+<%= link_to 'Download attractions', attractions_path(format: 'csv') %>

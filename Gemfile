@@ -13,11 +13,13 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'httparty'
+gem 'nokogiri'
+gem 'watir'
+gem 'poltergeist'
+gem 'phantomjs', :require => 'phantomjs/poltergeist'
 gem 'gmaps4rails'
 
 gem 'figaro'
-
-
 
 group :development, :test do
   gem 'pry'

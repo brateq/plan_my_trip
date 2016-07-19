@@ -4,11 +4,18 @@ class AttractionsController < ApplicationController
   # GET /attractions
   # GET /attractions.json
   def index
-    @attractions = Attraction.all
+    @attractions = Attraction.where(visited: false)
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
+      next if attraction.latitude.nil?
       marker.infowindow attraction.name
       marker.lat attraction.latitude
       marker.lng attraction.longitude
+    end
+    @hash.delete_if { |k,v| k.empty? }
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @attractions.to_csv }
     end
   end
 
