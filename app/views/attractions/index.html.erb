@@ -5,6 +5,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Attractions (<%= @attractions.count %>) </h1>
+<%= link_to "Reset map", reset_attractions_path, method: :post %>
 
 <table>
   <thead>
@@ -26,7 +27,7 @@
         <td><%= attraction.latitude %></td>
         <td><%= attraction.longitude %></td>
         <td><%= link_to 'Edit', edit_attraction_path(attraction) %></td>
-        <td><%= link_to 'Destroy', attraction, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', attraction, method: :delete %></td>
       </tr>
     <% end %>
   </tbody>

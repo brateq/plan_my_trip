@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   root 'attractions#index'
-  resources :attractions
+  resources :attractions do
+    collection do
+      post 'reset'
+    end
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

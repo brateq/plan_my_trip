@@ -73,6 +73,12 @@ class AttractionsController < ApplicationController
     end
   end
 
+  def reset
+    Attraction.where(visited: false).destroy_all
+
+    redirect_to :root
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_attraction

@@ -5,20 +5,22 @@ class Attraction < ActiveRecord::Base
   validates :link, uniqueness: true
 
   class << self
-    def self.import_from_ta(ta_link)
+    def import_from_ta(ta_link)
       page = HTTParty.get(ta_link)
 
       parse_page = Nokogiri::HTML(page)
       parse_page.css('.property_title').map do |a|
         create(name: a.text,
-               link: a.css('a').map { |link| link['href'] }.first)
+               link: a.css('a').map { |link| 'https://pl.tripadvisor.com' + link['href'] }.first)
       end
       next_page = parse_page.css('.next').map { |a| a['href'] }.first
       import_from_ta('https://pl.tripadvisor.com' + next_page) if next_page
     end
 
-    def self.import_visited(user_name)
+    def import_visited(user_name)
+      binding.pry
       Watir::Browser.new(:phantomjs)
+
       Selenium::WebDriver::PhantomJS.path = Phantomjs.path
       browser = Watir::Browser.new(:phantomjs)
       browser.goto('https://pl.tripadvisor.com/members/' + user_name)
