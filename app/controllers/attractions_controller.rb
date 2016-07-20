@@ -11,7 +11,7 @@ class AttractionsController < ApplicationController
       marker.lat attraction.latitude
       marker.lng attraction.longitude
     end
-    @hash.delete_if { |k,v| k.empty? }
+    @hash.delete_if { |k, _v| k.empty? }
 
     respond_to do |format|
       format.html
@@ -87,13 +87,14 @@ class AttractionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_attraction
-      @attraction = Attraction.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def attraction_params
-      params.require(:attraction).permit(:name, :type, :link, :latitude, :longitude)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_attraction
+    @attraction = Attraction.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def attraction_params
+    params.require(:attraction).permit(:name, :type, :link, :latitude, :longitude)
+  end
 end

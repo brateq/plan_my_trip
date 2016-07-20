@@ -29,8 +29,8 @@ class Attraction < ActiveRecord::Base
         page = Nokogiri::HTML(browser.html)
         page.css('.cs-review-location').map do |a|
           Attraction.create(name: a.text,
-                 link: a.css('a').map { |link| 'https://pl.tripadvisor.com' + link['href'] }.first,
-                 visited: true)
+                            link: a.css('a').map { |link| 'https://pl.tripadvisor.com' + link['href'] }.first,
+                            visited: true)
         end
 
         browser.button(text: 'Następne').click
@@ -38,13 +38,13 @@ class Attraction < ActiveRecord::Base
     end
 
     def to_csv
-      attributes = %w{name latitude longitude link}
+      attributes = %w(name latitude longitude link)
 
       CSV.generate(headers: true) do |csv|
         csv << attributes
 
-        all.each do |attraction|
-          csv << attributes.map{ |attr| attraction.send(attr) }
+        all.find_each do |attraction|
+          csv << attributes.map { |attr| attraction.send(attr) }
         end
       end
     end
@@ -56,5 +56,4 @@ class Attraction < ActiveRecord::Base
     return nil unless cont
     update(latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng'))
   end
-
 end

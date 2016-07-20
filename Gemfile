@@ -16,7 +16,7 @@ gem 'httparty'
 gem 'nokogiri'
 gem 'watir'
 gem 'poltergeist'
-gem 'phantomjs', :require => 'phantomjs/poltergeist'
+gem 'phantomjs', require: 'phantomjs/poltergeist'
 gem 'gmaps4rails'
 
 gem 'figaro'
@@ -28,5 +28,5 @@ end
 
 group :development do
   gem 'spring'
+  gem 'rubocop', require: false
 end
-
