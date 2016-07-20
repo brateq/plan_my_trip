@@ -4,6 +4,10 @@
 
 <p id="notice"><%= notice %></p>
 
+<%= form_for :ta_url, url: import_attractions_path, method: :post do |f| %>
+  <%= f.text_field :url %>
+<% end %>
+
 <h1>Listing Attractions (<%= @attractions.count %>) </h1>
 <%= link_to "Reset map", reset_attractions_path, method: :post %>
 

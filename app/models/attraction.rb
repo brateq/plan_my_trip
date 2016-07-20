@@ -10,15 +10,15 @@ class Attraction < ActiveRecord::Base
 
       parse_page = Nokogiri::HTML(page)
       parse_page.css('.property_title').map do |a|
-        create(name: a.text,
-               link: a.css('a').map { |link| 'https://pl.tripadvisor.com' + link['href'] }.first)
+        attraction = create(name: a.text,
+                            link: a.css('a').map { |link| 'https://pl.tripadvisor.com' + link['href'] }.first)
+        attraction.download_location
       end
       next_page = parse_page.css('.next').map { |a| a['href'] }.first
       import_from_ta('https://pl.tripadvisor.com' + next_page) if next_page
     end
 
     def import_visited(user_name)
-      binding.pry
       Watir::Browser.new(:phantomjs)
 
       Selenium::WebDriver::PhantomJS.path = Phantomjs.path

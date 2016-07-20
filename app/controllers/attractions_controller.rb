@@ -73,6 +73,13 @@ class AttractionsController < ApplicationController
     end
   end
 
+  def import
+    url = params['ta_url']['url']
+    Attraction.import_from_ta(url)
+
+    redirect_to :root, notice: 'Import in progress'
+  end
+
   def reset
     Attraction.where(visited: false).destroy_all
 
