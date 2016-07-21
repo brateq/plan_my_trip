@@ -8,48 +8,51 @@
   <%= f.text_field :url %>
 <% end %>
 
-<h1>Listing Attractions (<%= @attractions.count %>) </h1>
-<%= link_to "Reset map", reset_attractions_path, method: :post %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Link</th>
-      <th>Latitude</th>
-      <th>Longitude</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<% if @attractions.any?  %>
+  <h1>Listing Attractions (<%= @attractions.count %>) </h1>
+  <%= link_to "Reset map", reset_attractions_path, method: :post %>
 
-  <tbody>
-    <% @attractions.each do |attraction| %>
+  <table>
+    <thead>
       <tr>
-        <td><%= link_to attraction.name, attraction.link, :target => "_blank" %></td>
-        <td><%= attraction.type %></td>
-        <td><%= attraction.latitude %></td>
-        <td><%= attraction.longitude %></td>
-        <td><%= link_to 'Edit', edit_attraction_path(attraction) %></td>
-        <td><%= link_to 'Destroy', attraction, method: :delete %></td>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Link</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @attractions.each do |attraction| %>
+        <tr>
+          <td><%= link_to attraction.name, attraction.link, :target => "_blank" %></td>
+          <td><%= attraction.type %></td>
+          <td><%= attraction.latitude %></td>
+          <td><%= attraction.longitude %></td>
+          <td><%= link_to 'Edit', edit_attraction_path(attraction) %></td>
+          <td><%= link_to 'Destroy', attraction, method: :delete %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<div style='width: 800px;'>
-  <div id="map" style='width: 1250px; height: 600px;'></div>
-</div>
+  <br>
 
-<script type="text/javascript">
-  handler = Gmaps.build('Google');
-  handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
-    markers = handler.addMarkers(<%=raw @hash.to_json %>);
-    handler.bounds.extendWith(markers);
-    handler.fitMapToBounds();
-  });
-</script>
+  <div style='width: 800px;'>
+    <div id="map" style='width: 1250px; height: 600px;'></div>
+  </div>
 
-<%= link_to 'Download attractions', attractions_path(format: 'csv') %>
+  <script type="text/javascript">
+    handler = Gmaps.build('Google');
+    handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+      markers = handler.addMarkers(<%=raw @hash.to_json %>);
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+    });
+  </script>
+
+  <%= link_to 'Download attractions', attractions_path(format: 'csv') %>
+<% end %>
