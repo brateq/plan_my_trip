@@ -1,0 +1,19 @@
+%p#notice= notice
+%p
+  %strong Name:
+  = @attraction.name
+%p
+  %strong Type:
+  = @attraction.type
+%p
+  %strong Link:
+  = @attraction.link
+%p
+  %strong Latitude:
+  = @attraction.latitude
+%p
+  %strong Longitude:
+  = @attraction.longitude
+= link_to 'Edit', edit_attraction_path(@attraction)
+|
+= link_to 'Back', attractions_path
