@@ -1,5 +1,6 @@
 class Attraction < ActiveRecord::Base
   require 'open-uri'
+  require 'selenium-webdriver'
 
   validates :name, presence: true
   validates :link, uniqueness: true
@@ -19,13 +20,11 @@ class Attraction < ActiveRecord::Base
     end
 
     def import_visited(user_name)
-      Watir::Browser.new(:phantomjs)
-
       Selenium::WebDriver::PhantomJS.path = Phantomjs.path
       browser = Watir::Browser.new(:phantomjs)
       browser.goto('https://pl.tripadvisor.com/members/' + user_name)
 
-      begin
+      loop do
         page = Nokogiri::HTML(browser.html)
         page.css('.cs-review-location').map do |a|
           Attraction.create(name: a.text,
@@ -34,7 +33,8 @@ class Attraction < ActiveRecord::Base
         end
 
         browser.button(text: 'Następne').click
-      end until page.css('#cs-paginate-next').first.attr('class') == 'disabled'
+        break if page.css('#cs-paginate-next').first.attr('class') == 'disabled'
+      end
     end
 
     def to_csv
