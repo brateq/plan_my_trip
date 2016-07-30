@@ -58,7 +58,7 @@ class AttractionsController < ApplicationController
 
   def import
     url = params['ta_url']['url']
-    Attraction.import_from_ta(url)
+    Tripadvisor.import(url)
 
     redirect_to :root, notice: 'Import done'
   end
