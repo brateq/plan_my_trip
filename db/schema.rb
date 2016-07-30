@@ -11,18 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_160_718_130_356) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+ActiveRecord::Schema.define(version: 20160718130356) do
 
-  create_table 'attractions', force: :cascade do |t|
-    t.string   'name'
-    t.string   'type'
-    t.string   'link'
-    t.float    'latitude'
-    t.float    'longitude'
-    t.boolean  'visited', default: false
-    t.datetime 'created_at',                 null: false
-    t.datetime 'updated_at',                 null: false
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "attractions", force: :cascade do |t|
+    t.string   "name"
+    t.string   "type"
+    t.string   "link"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "visited",    default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
+
 end
