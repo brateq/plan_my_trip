@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20160718130356) do
     t.string   "link"
     t.float    "latitude"
     t.float    "longitude"
+    t.float    "stars"
     t.boolean  "visited",    default: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false

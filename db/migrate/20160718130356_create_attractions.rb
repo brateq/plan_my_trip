@@ -6,6 +6,7 @@ class CreateAttractions < ActiveRecord::Migration
       t.string :link
       t.float :latitude
       t.float :longitude
+      t.float :stars
       t.boolean :visited, default: false
 
       t.timestamps null: false
