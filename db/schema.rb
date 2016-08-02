@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20160718130356) do
 
   create_table "attractions", force: :cascade do |t|
     t.string   "name"
-    t.string   "type"
+    t.string   "category"
     t.string   "link"
     t.float    "latitude"
     t.float    "longitude"

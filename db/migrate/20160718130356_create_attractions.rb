@@ -2,7 +2,7 @@ class CreateAttractions < ActiveRecord::Migration
   def change
     create_table :attractions do |t|
       t.string :name
-      t.string :type
+      t.string :category
       t.string :link
       t.float :latitude
       t.float :longitude

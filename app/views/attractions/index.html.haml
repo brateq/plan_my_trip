@@ -12,8 +12,8 @@
     %thead
       %tr
         %th Name
-        %th Type
-        %th Link
+        %th Stars
+        %th Category
         %th Latitude
         %th Longitude
         %th{:colspan => "3"}
@@ -21,7 +21,8 @@
       - @attractions.each do |attraction|
         %tr
           %td= link_to attraction.name, attraction.link, :target => "_blank"
-          %td= attraction.type
+          %td= attraction.stars
+          %td= attraction.category
           %td= attraction.latitude
           %td= attraction.longitude
           %td= link_to 'Edit', edit_attraction_path(attraction)
