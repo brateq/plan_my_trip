@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20160718130356) do
     t.string   "province"
     t.string   "municipality"
     t.string   "city"
+    t.string   "island_group"
+    t.string   "island"
     t.float    "stars"
     t.boolean  "visited",      default: false
     t.datetime "created_at",                   null: false

@@ -5,6 +5,8 @@ class Attraction < ActiveRecord::Base
   validates :name, presence: true
   validates :link, uniqueness: true
 
+  scope :visited, -> { where(visited: true) }
+
   def self.to_csv
     attributes = %w(name latitude longitude link)
 
@@ -24,15 +26,15 @@ class Attraction < ActiveRecord::Base
     localization = Hash.new
     parse_page.css('.breadcrumb_link').each do |breadcrump|
       breadcrump_script = breadcrump.attr('onclick')
-      local_type =  /(Continent|Country|Region|Province|Municipality|City)/.match(breadcrump_script).to_s
+      local_type =  /(Continent|Country|Region|Province|Municipality|City|IslandGroup|Island)/.match(breadcrump_script).to_s
       next if local_type.empty?
       local_type = local_type.underscore.to_sym
-      localization[local_type] = breadcrump.css('span').text 
+      localization[local_type] = breadcrump.css('span').text
     end
     update(localization)
 
     return nil unless cont
     update(latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng'))
-    
+
   end
 end

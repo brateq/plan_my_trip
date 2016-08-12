@@ -16,11 +16,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'httparty'
 gem 'nokogiri'
 gem 'watir'
-gem 'poltergeist' 
+gem 'poltergeist'
 gem 'phantomjs', require: 'phantomjs/poltergeist'
 gem 'gmaps4rails'
 
 gem 'figaro'
+gem 'draper'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
