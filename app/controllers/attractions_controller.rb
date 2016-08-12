@@ -5,7 +5,10 @@ class AttractionsController < ApplicationController
     @attractions = Attraction.where(visited: false)
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
-      marker.infowindow attraction.name
+      marker.title attraction.name
+      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
+                         
+                         <p><a href='attractions/#{attraction.id}' data-method='delete'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
     end

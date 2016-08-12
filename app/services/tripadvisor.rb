@@ -26,7 +26,7 @@ class Tripadvisor
                         link: a.css('a').map {
                             |link| ta_url + link['href']
                           }).first_or_initialize
-          attraction.name = a.text if attraction.name
+          attraction.name = a.text if attraction.name.nil?
           attraction.visited = true
           attraction.save
         end
@@ -43,11 +43,12 @@ class Tripadvisor
 
     def location_prioperties(attraction_html)
       properties = Hash.new
+      category = attraction_html.css('.p13n_reasoning_v2 a').first ? category(attraction_html.css('.p13n_reasoning_v2 a').first['href']) : '' 
       properties = {
         name: attraction_html.css('.property_title a').text,
         link: attraction_html.css('.property_title a').map { |link| ta_url + link['href'] }.first,
         stars: stars(attraction_html),
-        category: category(attraction_html.css('.p13n_reasoning_v2 a').first['href'])}
+        category: category }
     end
 
     def category(link)

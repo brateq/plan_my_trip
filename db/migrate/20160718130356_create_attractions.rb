@@ -6,6 +6,12 @@ class CreateAttractions < ActiveRecord::Migration
       t.string :link
       t.float :latitude
       t.float :longitude
+      t.string :continent
+      t.string :country
+      t.string :region
+      t.string :province
+      t.string :municipality
+      t.string :city
       t.float :stars
       t.boolean :visited, default: false
 
