@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
+
 gem 'pg', '~> 0.15'
 
 gem 'sass-rails', '~> 5.0'
@@ -21,7 +23,7 @@ gem 'phantomjs', require: 'phantomjs/poltergeist'
 gem 'gmaps4rails'
 
 gem 'figaro'
-gem 'draper'
+gem 'draper', github: 'audionerd/draper', branch: 'rails5'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
