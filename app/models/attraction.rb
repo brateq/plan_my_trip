@@ -20,6 +20,7 @@ class Attraction < ActiveRecord::Base
   end
 
   def download_location
+    return false if latitude
     parse_page = Nokogiri::HTML(open(link))
     cont = parse_page.css('.mapContainer').first
 
@@ -35,6 +36,5 @@ class Attraction < ActiveRecord::Base
 
     return nil unless cont
     update(latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng'))
-
   end
 end

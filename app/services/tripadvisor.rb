@@ -3,6 +3,17 @@ class Tripadvisor
 
   class << self
     def import(link)
+      return import_category(link) unless category(link).nil?
+      
+      categories.each do |category_number, name|
+        puts category_number
+        puts name
+        category_link = link.gsub('Activities-', "Activities-c#{category_number}-")
+        import_category(category_link)
+      end
+    end
+
+    def import_category(link)
       page = HTTParty.get(link)
 
       parse_page = Nokogiri::HTML(page)
@@ -11,7 +22,7 @@ class Tripadvisor
         attraction.download_location
       end
       next_page = parse_page.css('.next').map { |a| a['href'] }.first
-      import(ta_url + next_page) if next_page
+      import_category(ta_url + next_page) if next_page
     end
 
     def import_visited(user_name)
@@ -52,21 +63,23 @@ class Tripadvisor
     end
 
     def category(link)
-      category_number = /-c(\d{2})-/.match(link).captures.first.to_i
+      category_number = /-c(\d{2})-/.match(link)
+      return nil if category_number.nil?
+      category_number = category_number.captures.first.to_i
       categories[category_number]
     end
 
     def categories
       {
-        47 => 'Zabytki i ciekawe miejsca',
-        49 => 'Muzea',
         20 => 'Lokale czynne w nocy',
-        61 => 'Wypoczynek na świeżym powietrzu',
+        47 => 'Zabytki i ciekawe miejsca',
+        48 => 'Zoo i akwaria',
+        49 => 'Muzea',
+        52 => 'Parki rozrwki i parki wodne',
+        55 => 'Rejsy i sporty wodne',
         56 => 'Gry i zabawy',
         57 => 'Parki i natura',
-        48 => 'Zoo i akwaria',
-        52 => 'Parki rozrwki i parki wodne',
-        55 => 'Rejsy i sporty wodne'
+        61 => 'Wypoczynek na świeżym powietrzu'
       }
     end
 
