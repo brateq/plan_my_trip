@@ -1,5 +1,5 @@
 %ul
-  - @attractions.continents_stats.each do |continent, stats|
+  - @attractions.stats(params[:type], params[:name]).each do |region, stats|
     %li
-      = continent
+      = link_to region, attractions_path(type: params[:type], name: region)
       = "#{stats[:attractions]} / #{stats[:visited]} = #{stats[:percent]}"
