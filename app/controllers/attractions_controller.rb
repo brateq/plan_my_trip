@@ -2,17 +2,21 @@ class AttractionsController < ApplicationController
   before_action :set_attraction, only: [:show, :edit, :update, :destroy]
 
   def index
-    @attractions = AttractionDecorator.decorate(Attraction.all)
+    params[:type] = 'continent' if params[:type].nil?
+    params[:name] = 'Europa' if params[:name].nil?
+    attractions = Attraction.where(params[:type] => params[:name])
+
+    @attractions = AttractionDecorator.decorate(attractions)
   end
 
   def show
-    @attractions = Attraction.where(visited: false)
+    @attractions = Attraction.where(visited: false).where('stars >= 4', 4)
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
       marker.title attraction.name
       marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
 
-                         <p><a href='attractions/#{attraction.id}' data-method='delete'>Destroy</a></p>"
+                         <p><a href='#{attraction.id}' data-method='delete'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
     end
@@ -62,7 +66,7 @@ class AttractionsController < ApplicationController
 
   def import
     url = params['ta_url']['url']
-    Tripadvisor.import(url)
+    Tripadvisor.delay.import(url)
 
     redirect_to :root, notice: 'Import done'
   end

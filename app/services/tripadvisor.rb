@@ -6,7 +6,6 @@ class Tripadvisor
       return import_category(link) unless category(link).nil?
       
       categories.each do |category_number, name|
-        puts category_number
         puts name
         category_link = link.gsub('Activities-', "Activities-c#{category_number}-")
         import_category(category_link)
@@ -47,11 +46,6 @@ class Tripadvisor
       end
     end
 
-    def stars(attraction_html)
-      attraction_stars = attraction_html.css('.rate_no img').map { |i| i['alt'] }.first
-      /^\S{1,3}/.match(attraction_stars).to_s.gsub(',', '.').to_f
-    end
-
     def location_prioperties(attraction_html)
       properties = Hash.new
       category = attraction_html.css('.p13n_reasoning_v2 a').first ? category(attraction_html.css('.p13n_reasoning_v2 a').first['href']) : '' 
@@ -59,7 +53,18 @@ class Tripadvisor
         name: attraction_html.css('.property_title a').text,
         link: attraction_html.css('.property_title a').map { |link| ta_url + link['href'] }.first,
         stars: stars(attraction_html),
+        reviews: reviews(attraction_html),
         category: category }
+    end
+
+    def stars(attraction_html)
+      attraction_stars = attraction_html.css('.rate_no img').map { |i| i['alt'] }.first
+      /^\S{1,3}/.match(attraction_stars).to_s.gsub(',', '.').to_f
+    end
+
+    def reviews(attraction_html)
+      text = attraction_html.css('.more a').text.delete(' ')
+       /(\d+)/.match(text).to_s.to_i
     end
 
     def category(link)
