@@ -12,6 +12,39 @@ class Tripadvisor
       end
     end
 
+    def import_continent(link)
+      page = HTTParty.get(link)
+      parse_page = Nokogiri::HTML(page)
+
+      parse_page.css('.geo_name a').each do |location|
+        link = ta_url + location['href']
+        import(link)
+      end
+
+      parse_page.css('.geoList a').each do |location|
+        link = ta_url + location['href']
+        import(link)
+      end
+
+      next_page = parse_page.css('.next').map { |a| a['href'] }.first
+      puts 'Current page: ' + link
+      puts 'Next page: ' + nextx_page
+      import_continent(ta_url + next_page) if next_page
+    end
+
+    def import_country(link)
+      page = HTTParty.get(link)
+      parse_page = Nokogiri::HTML(page)
+
+      parse_page.css('.filter_list .filter a').each do |location|
+        link = ta_url + location['href']
+        import(link)
+      end
+
+      next_page = parse_page.css('.next').map { |a| a['href'] }.first
+      import_continent(ta_url + next_page) if next_page
+    end
+
     def import_category(link)
       page = HTTParty.get(link)
 
@@ -41,6 +74,7 @@ class Tripadvisor
           attraction.save
         end
 
+        attraction.download_location
         browser.button(text: 'Następne').click
         break if page.css('#cs-paginate-next').first.attr('class') == 'disabled'
       end

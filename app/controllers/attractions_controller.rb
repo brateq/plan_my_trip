@@ -16,7 +16,7 @@ class AttractionsController < ApplicationController
       marker.title attraction.name
       marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
 
-                         <p><a href='#{attraction.id}' data-method='delete'>Destroy</a></p>"
+                         <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
     end
@@ -24,6 +24,7 @@ class AttractionsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.json
       format.csv { send_data @attractions.to_csv }
     end
   end

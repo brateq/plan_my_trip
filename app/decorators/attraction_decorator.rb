@@ -5,7 +5,10 @@ class AttractionDecorator < Draper::Decorator
     statistics = Hash.new
     next_region_type = next_type(type)
     object.uniq.pluck(next_region_type).each do |current_region|
-      attractions = object.where(next_region_type => current_region).count
+      attractions = object.where(next_region_type => current_region)
+                          .where('stars >= ?', 4)
+                          .where('reviews > ?', 2)
+                          .count
       visited = object.where(next_region_type => current_region).visited.count
       percent = visited == 0 ? nil : h.number_to_percentage(visited.to_f / attractions.to_f * 100)
 

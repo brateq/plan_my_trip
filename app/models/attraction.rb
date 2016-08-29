@@ -22,7 +22,6 @@ class Attraction < ActiveRecord::Base
   def download_location
     return false if latitude
     parse_page = Nokogiri::HTML(open(link))
-    cont = parse_page.css('.mapContainer').first
 
     localization = Hash.new
     parse_page.css('.breadcrumb_link').each do |breadcrump|
@@ -33,6 +32,9 @@ class Attraction < ActiveRecord::Base
       localization[local_type] = breadcrump.css('span').text
     end
     update(localization)
+
+
+    cont = parse_page.css('.mapContainer').first
 
     return nil unless cont
     update(latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng'))
