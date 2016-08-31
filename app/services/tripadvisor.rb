@@ -4,7 +4,7 @@ class Tripadvisor
   class << self
     def import(link)
       return import_category(link) unless category(link).nil?
-      
+
       categories.each do |category_number, name|
         puts name
         category_link = link.gsub('Activities-', "Activities-c#{category_number}-")
@@ -20,23 +20,29 @@ class Tripadvisor
         link = ta_url + location['href']
         import(link)
       end
+    end
+
+    def import_from_city_list(link)
+      page = HTTParty.get(link)
+      parse_page = Nokogiri::HTML(page)
 
       parse_page.css('.geoList a').each do |location|
         link = ta_url + location['href']
         import(link)
       end
 
-      next_page = parse_page.css('.next').map { |a| a['href'] }.first
+      next_page = parse_page.css('.sprite-pageNext').first['href']
       puts 'Current page: ' + link
-      puts 'Next page: ' + nextx_page
-      import_continent(ta_url + next_page) if next_page
+      return if next_page.empty?
+
+      import_from_city_list(ta_url + next_page) if next_page
     end
 
     def import_country(link)
       page = HTTParty.get(link)
       parse_page = Nokogiri::HTML(page)
 
-      parse_page.css('.filter_list .filter a').each do |location|
+      parse_page.css('#CHILD_GEO_FILTER .filter_list .filter a').each do |location|
         link = ta_url + location['href']
         import(link)
       end
@@ -47,12 +53,15 @@ class Tripadvisor
 
     def import_category(link)
       page = HTTParty.get(link)
-
       parse_page = Nokogiri::HTML(page)
-      parse_page.css('.attraction_element').map do |a|
-        attraction = Attraction.create(location_prioperties(a))
-        attraction.download_location
+
+      ActiveRecord::Base.transaction do
+        parse_page.css('.attraction_element').map do |a|
+          attraction = Attraction.create(location_prioperties(a))
+          attraction.download_location
+        end
       end
+
       next_page = parse_page.css('.next').map { |a| a['href'] }.first
       import_category(ta_url + next_page) if next_page
     end
@@ -82,7 +91,7 @@ class Tripadvisor
 
     def location_prioperties(attraction_html)
       properties = Hash.new
-      category = attraction_html.css('.p13n_reasoning_v2 a').first ? category(attraction_html.css('.p13n_reasoning_v2 a').first['href']) : '' 
+      category = attraction_html.css('.p13n_reasoning_v2 a').first ? category(attraction_html.css('.p13n_reasoning_v2 a').first['href']) : ''
       properties = {
         name: attraction_html.css('.property_title a').text,
         link: attraction_html.css('.property_title a').map { |link| ta_url + link['href'] }.first,

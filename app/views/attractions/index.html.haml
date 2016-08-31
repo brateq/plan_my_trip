@@ -1,3 +1,6 @@
+= form_for :ta_url, url: import_attractions_path, method: :post do |f|
+  = f.text_field :url
+
 %ul
   - @attractions.stats(params[:type], params[:name]).each do |region, stats|
     %li

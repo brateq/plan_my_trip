@@ -10,7 +10,7 @@ class AttractionsController < ApplicationController
   end
 
   def show
-    @attractions = Attraction.where(visited: false).where('stars >= 4', 4)
+    @attractions = Attraction.where(visited: false).where('stars >= 4', 4).where('reviews >= ?', 2)
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
       marker.title attraction.name

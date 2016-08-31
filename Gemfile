@@ -25,6 +25,7 @@ gem 'gmaps4rails'
 gem 'figaro'
 gem 'draper', github: 'audionerd/draper', branch: 'rails5'
 gem 'sidekiq'
+gem 'seed_dump'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
