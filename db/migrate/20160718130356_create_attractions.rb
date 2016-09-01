@@ -16,6 +16,7 @@ class CreateAttractions < ActiveRecord::Migration
       t.string :island
       t.float :stars
       t.integer :reviews
+      t.string :status
       t.boolean :visited, default: false
 
       t.timestamps null: false

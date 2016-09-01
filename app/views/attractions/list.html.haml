@@ -1,5 +1,7 @@
 %script{:src => "//maps.google.com/maps/api/js?v=3.23&key=#{ENV['gmaps_api_token']}"}
 %script{:src => "//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"}
+%script{:src => '//cdn.rawgit.com/googlemaps/js-rich-marker/gh-pages/src/richmarker-compiled.js'}
+
 %script{:src => "//cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js", :type => "text/javascript"}
 %p#notice= notice
 = form_for :ta_url, url: import_attractions_path, method: :post do |f|
@@ -14,12 +16,8 @@
   %div{:style => "width: 800px;"}
     #map{:style => "width: 1250px; height: 600px;"}
   :javascript
-    handler = Gmaps.build('Google');
-    handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
-      markers = handler.addMarkers(#{raw @hash.to_json});
-      handler.bounds.extendWith(markers);
-      handler.fitMapToBounds();
-    });
+    buildMap(#{raw @hash.to_json});
+
   = link_to 'Download attractions', attractions_path(format: 'csv')
 
   %table
@@ -54,6 +52,5 @@
           %td= attraction.island_group
           %td= attraction.island
           %td= attraction.latitude
-          %td= attraction.longitude
           %td= link_to 'Edit', edit_attraction_path(attraction)
-          %td= link_to 'Destroy', attraction, method: :delete
+          %td= link_to 'Destroy', attraction, method: :delete, remote: true

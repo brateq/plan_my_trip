@@ -6,6 +6,8 @@ class Attraction < ActiveRecord::Base
   validates :link, uniqueness: true
 
   scope :visited, -> { where(visited: true) }
+  scope :not_visited, -> { where(visited: false) }
+  scope :want_to_visit, -> { where(status: nil) }
 
   def self.to_csv
     attributes = %w(name latitude longitude link)

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'attractions#index'
   resources :attractions do
     collection do
+      get 'list'
       post 'import'
       post 'reset'
     end

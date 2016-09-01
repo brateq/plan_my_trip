@@ -9,16 +9,16 @@ class AttractionsController < ApplicationController
     @attractions = AttractionDecorator.decorate(attractions)
   end
 
-  def show
-    @attractions = Attraction.where(visited: false).where('stars >= 4', 4).where('reviews >= ?', 2)
+  def list
+    @attractions = Attraction.not_visited.want_to_visit.where('stars >= 4', 4).where('reviews >= ?', 2)
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
+      marker.json({:id => attraction.id })
       marker.title attraction.name
-      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
-
-                         <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
+      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
+
     end
     @hash.delete_if { |k, _v| k.empty? }
 
@@ -59,9 +59,10 @@ class AttractionsController < ApplicationController
   end
 
   def destroy
-    @attraction.destroy
+    @attraction.update(status: "not interested")
     respond_to do |format|
-      format.html { redirect_to attractions_url, notice: 'Attraction was successfully destroyed.' }
+      format.html { redirect_to attractions_list_url, notice: 'Attraction status changed to not interested.' }
+      format.json
     end
   end
 

@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+
+.infoBox {
+  background-color: white;
+}

@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20160718130356) do
     t.string   "island"
     t.float    "stars"
     t.integer  "reviews"
+    t.string   "status"
     t.boolean  "visited",      default: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
