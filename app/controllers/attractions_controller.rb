@@ -1,5 +1,5 @@
 class AttractionsController < ApplicationController
-  before_action :set_attraction, only: [:show, :edit, :update, :destroy]
+  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see]
 
   def index
     params[:type] = 'continent' if params[:type].nil?
@@ -10,12 +10,17 @@ class AttractionsController < ApplicationController
   end
 
   def list
-    @attractions = Attraction.not_visited.want_to_visit.where('stars >= 4', 4).where('reviews >= ?', 2)
+    @attractions = Attraction.not_visited
+                             .want_to_visit.where('stars >= 4', 4)
+                             .where('reviews >= ?', 2)
+                             .order(reviews: :desc)
+
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
       marker.json({:id => attraction.id })
       marker.title attraction.name
-      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>"
+      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
+                         <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
 
@@ -56,6 +61,10 @@ class AttractionsController < ApplicationController
         format.html { render :edit }
       end
     end
+  end
+
+  def must_see
+    @attraction.update(status: "must see")
   end
 
   def destroy

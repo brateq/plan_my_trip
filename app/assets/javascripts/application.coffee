@@ -34,16 +34,9 @@ class InfoBoxBuilder extends Gmaps.Google.Builders.Marker
       width: "280px"
 
 @buildMap = (markers) ->
-  handler = Gmaps.build 'Google', { builders: { Marker: InfoBoxBuilder} }
+  handler = Gmaps.build 'Google'
 
   handler.buildMap { provider: {}, internal: {id: 'map'} }, ->
-    console.log(markers)
-    Gmaps.store.markers = markers.map((m) ->
-      marker = handler.addMarker(m)
-      marker.serviceObject.set 'id', m.id
-      marker
-    )
-    console.log(markers)
-    handler.bounds.extendWith(Gmaps.store.markers)
+    markers = handler.addMarkers(markers)
+    handler.bounds.extendWith(markers)
     handler.fitMapToBounds()
-

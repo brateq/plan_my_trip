@@ -17,3 +17,7 @@
 .infoBox {
   background-color: white;
 }
+
+td {
+  border-bottom: black 1px solid;
+}
