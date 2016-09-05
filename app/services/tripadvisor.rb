@@ -81,9 +81,11 @@ class Tripadvisor
           attraction.name = a.text if attraction.name.nil?
           attraction.visited = true
           attraction.save
+
+          attraction.download_location
         end
 
-        attraction.download_location
+        
         browser.button(text: 'Następne').click
         break if page.css('#cs-paginate-next').first.attr('class') == 'disabled'
       end

@@ -10,7 +10,7 @@
   %h1
     Listing Attractions (#{@attractions.count})
     must see (#{@attractions.must_see.count})
-    which is #{(@attractions.must_see.count.to_f / Attraction.count.to_f) * 100}% of all country attractions
+    which is #{(@attractions.must_see.count.to_f / Attraction.where(country: 'Słowacja').count.to_f) * 100}% of all country attractions
   = link_to "Reset map", reset_attractions_path, method: :post
 
   %br/
@@ -25,16 +25,16 @@
   %table
     %thead
       %tr
-        %th Name
+        %th= sort_link(@q, :name)
         %th
         %th
-        %th Stars
-        %th Reviews
-        %th Status
-        %th Category
-        %td Region
-        %td City
-        %th Latitude
+        %th= sort_link(@q, :stars)
+        %th= sort_link(@q, :reviews)
+        %th= sort_link(@q, :status)
+        %th= sort_link(@q, :category)
+        %td= sort_link(@q, :region)
+        %td= sort_link(@q, :city)
+        %th= sort_link(@q, :latitude)
         %th
     %tbody
       - @attractions.each do |attraction|

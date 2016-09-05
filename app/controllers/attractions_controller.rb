@@ -10,10 +10,14 @@ class AttractionsController < ApplicationController
   end
 
   def list
-    @attractions = Attraction.not_visited
-                             .want_to_visit.where('stars >= 4', 4)
-                             .where('reviews >= ?', 2)
-                             .order(reviews: :desc)
+    @q = Attraction.where(country: "Słowacja")
+                   .not_visited
+                   .want_to_visit
+                   .where('stars >= 4', 4)
+                   .where('reviews >= ?', 2)
+                   .ransack(params[:q])        
+                      
+    @attractions = @q.result(distinct: true)
 
     @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
       next if attraction.latitude.nil?
