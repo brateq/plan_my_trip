@@ -1,28 +1,8 @@
-== README
+== Plan my trip
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Advanced trip planer with option to export results to csv (and then to Google Maps)
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+# To do
+* Attraction status independetly for every user, but with option of viewing each other statuses (for co-op planing)
+* Import "saved" attractions from TA
+* Easy config for production server
