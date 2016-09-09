@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       
     member do      
       post 'must_see'
+      post 'visited'
     end
   end
   # The priority is based upon order of creation: first created -> highest priority.

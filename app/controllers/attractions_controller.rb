@@ -1,5 +1,5 @@
 class AttractionsController < ApplicationController
-  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see]
+  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see, :visited]
 
   def index
     params[:type] = 'continent' if params[:type].nil?
@@ -10,11 +10,11 @@ class AttractionsController < ApplicationController
   end
 
   def list
-    @q = Attraction.where(country: "Słowacja")
+    @q = Attraction.where(country: "Polska")
                    .not_visited
                    .want_to_visit
                    .where('stars >= 4', 4)
-                   .where('reviews >= ?', 2)
+                   .where('reviews >= ?', 0)
                    .ransack(params[:q])        
                       
     @attractions = @q.result(distinct: true)
@@ -24,6 +24,7 @@ class AttractionsController < ApplicationController
       marker.json({:id => attraction.id })
       marker.title attraction.name
       marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
+                         <p>#{'must see' if attraction.status == 'must see'}</p>
                          <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
@@ -60,7 +61,7 @@ class AttractionsController < ApplicationController
   def update
     respond_to do |format|
       if @attraction.update(attraction_params)
-        format.html { redirect_to @attraction, notice: 'Attraction was successfully updated.' }
+        format.html { redirect_to list_attractions_path, notice: 'Attraction was successfully updated.' }
       else
         format.html { render :edit }
       end
@@ -69,6 +70,10 @@ class AttractionsController < ApplicationController
 
   def must_see
     @attraction.update(status: "must see")
+  end
+
+  def visited
+    @attraction.update(visited: true)
   end
 
   def destroy
