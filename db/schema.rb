@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909214409) do
+ActiveRecord::Schema.define(version: 20160910153534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,10 +31,20 @@ ActiveRecord::Schema.define(version: 20160909214409) do
     t.string   "island"
     t.float    "stars"
     t.integer  "reviews"
-    t.string   "status"
     t.boolean  "visited",      default: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+  end
+
+  create_table "statuses", force: :cascade do |t|
+    t.integer  "wanna_go"
+    t.boolean  "visited"
+    t.integer  "user_id"
+    t.integer  "attraction_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["attraction_id"], name: "index_statuses_on_attraction_id", using: :btree
+    t.index ["user_id"], name: "index_statuses_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

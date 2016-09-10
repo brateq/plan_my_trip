@@ -2,6 +2,8 @@ class Attraction < ActiveRecord::Base
   require 'open-uri'
   require 'selenium-webdriver'
 
+  has_and_belongs_to_many :users, through: :statuses 
+
   validates :name, presence: true
   validates :link, uniqueness: true
 
