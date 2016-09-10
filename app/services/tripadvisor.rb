@@ -66,10 +66,10 @@ class Tripadvisor
       import_category(ta_url + next_page) if next_page
     end
 
-    def import_visited(user_name)
+    def import_visited(ta_user_name, user)
       Selenium::WebDriver::PhantomJS.path = Phantomjs.path
       browser = Watir::Browser.new(:phantomjs)
-      browser.goto(ta_url + '/members/' + user_name)
+      browser.goto(ta_url + '/members/' + ta_user_name)
 
       loop do
         page = Nokogiri::HTML(browser.html)
@@ -79,9 +79,10 @@ class Tripadvisor
                             |link| ta_url + link['href']
                           }).first_or_initialize
           attraction.name = a.text if attraction.name.nil?
-          attraction.visited = true
           attraction.save
 
+          attraction.statuses.create(visited: true, user: user)
+        
           attraction.download_location
         end
 

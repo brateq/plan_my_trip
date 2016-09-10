@@ -6,14 +6,6 @@
 %p#notice= notice
 = form_for :ta_url, url: import_attractions_path, method: :post do |f|
   = f.text_field :url
-- if @attractions.any?
-  %h1
-    Listing Attractions (#{@attractions.count})
-    must see (#{@attractions.must_see.count})
-    which is #{(@attractions.must_see.count.to_f / Attraction.where(country: 'Słowacja').count.to_f) * 100}% of all country attractions
-  = link_to "Reset map", reset_attractions_path, method: :post
-
-  %br/
 
   %div{:style => "width: 800px;"}
     #map{:style => "width: 1250px; height: 600px;"}
@@ -26,6 +18,7 @@
     %thead
       %tr
         %th= sort_link(@q, :name)
+        %th
         %th
         %th
         %th= sort_link(@q, :stars)
@@ -44,10 +37,9 @@
           %td= link_to 'Must see', must_see_attraction_path(attraction), method: :post, remote: true
           %td= link_to 'Visited', visited_attraction_path(attraction), method: :post, remote: true
 
-
           %td= attraction.stars
           %td= attraction.reviews
-          %td= attraction.status
+          %td= attraction.statuses.find_by(user: current_user).try(:wonna_go)
           %td= attraction.category
           %td= attraction.region
           %td= attraction.city

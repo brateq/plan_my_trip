@@ -11,8 +11,6 @@ class AttractionsController < ApplicationController
 
   def list
     @q = Attraction.where(country: "Polska")
-                   .not_visited
-                   .want_to_visit
                    .where('stars >= 4', 4)
                    .where('reviews >= ?', 0)
                    .ransack(params[:q])        
@@ -24,7 +22,6 @@ class AttractionsController < ApplicationController
       marker.json({:id => attraction.id })
       marker.title attraction.name
       marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
-                         <p>#{'must see' if attraction.status == 'must see'}</p>
                          <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
