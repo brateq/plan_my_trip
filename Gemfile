@@ -40,4 +40,5 @@ end
 group :development do
   gem 'spring'
   gem 'rubocop', require: false
+  gem 'bullet'
 end
