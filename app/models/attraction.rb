@@ -1,9 +1,6 @@
 class Attraction < ActiveRecord::Base
-  require 'open-uri'
-  require 'selenium-webdriver'
-
   has_many :statuses
-  has_and_belongs_to_many :users, through: :statuses 
+  has_and_belongs_to_many :users, through: :statuses
 
   validates :name, presence: true
   validates :link, uniqueness: true
@@ -27,22 +24,16 @@ class Attraction < ActiveRecord::Base
 
   def download_location
     return false if latitude
-    parse_page = Nokogiri::HTML(open(link))
+    update(Tripadvisor.localization)
+  end
 
-    localization = Hash.new
-    parse_page.css('.breadcrumb_link').each do |breadcrump|
-      breadcrump_script = breadcrump.attr('onclick')
-      local_type =  /(Continent|Country|Region|Province|Municipality|City|IslandGroup|Island)/.match(breadcrump_script).to_s
-      next if local_type.empty?
-      local_type = local_type.underscore.to_sym
-      localization[local_type] = breadcrump.css('span').text
+  def self.import_visited(ta_user_name, user)
+    Tripadvisor.visited(ta_user_name).each do |location|
+      attraction = where(link: location[:link]).first_or_initialize
+      location.merge!(Tripadvisor.localization(location[:link])) unless attraction.continent
+      attraction.update(location)
+
+      attraction.statuses.create(visited: true, user: user)
     end
-    update(localization)
-
-
-    cont = parse_page.css('.mapContainer').first
-
-    return nil unless cont
-    update(latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng'))
   end
 end

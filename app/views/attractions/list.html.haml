@@ -10,7 +10,7 @@
   %div{:style => "width: 800px;"}
     #map{:style => "width: 1250px; height: 600px;"}
   :javascript
-    buildMap(#{raw @hash.to_json});
+    buildMap(#{raw @attractions.map_details});
 
   = link_to 'Download attractions', list_attractions_path(format: 'csv')
 

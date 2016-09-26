@@ -10,24 +10,13 @@ class AttractionsController < ApplicationController
   end
 
   def list
-    @q = Attraction.where(country: "Polska")
+    @q = Attraction.where(country: 'Polska')
                    .where('stars >= 4', 4)
                    .where('reviews >= ?', 0)
-                   .ransack(params[:q])        
-                      
+                   .ransack(params[:q])
+
     @attractions = @q.result(distinct: true)
-
-    @hash = Gmaps4rails.build_markers(@attractions) do |attraction, marker|
-      next if attraction.latitude.nil?
-      marker.json({:id => attraction.id })
-      marker.title attraction.name
-      marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
-                         <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
-      marker.lat attraction.latitude
-      marker.lng attraction.longitude
-
-    end
-    @hash.delete_if { |k, _v| k.empty? }
+    @attractions = AttractionDecorator.decorate(@attractions)
 
     respond_to do |format|
       format.html
@@ -66,7 +55,7 @@ class AttractionsController < ApplicationController
   end
 
   def must_see
-    @attraction.update(status: "must see")
+    @attraction.update(status: 'must see')
   end
 
   def visited
@@ -74,7 +63,7 @@ class AttractionsController < ApplicationController
   end
 
   def destroy
-    @attraction.update(status: "not interested")
+    @attraction.update(status: 'not interested')
     respond_to do |format|
       format.html { redirect_to attractions_list_url, notice: 'Attraction status changed to not interested.' }
       format.json

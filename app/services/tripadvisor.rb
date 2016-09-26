@@ -1,5 +1,6 @@
 class Tripadvisor
   require 'selenium-webdriver'
+  require 'open-uri'
 
   class << self
     def import(link)
@@ -66,51 +67,44 @@ class Tripadvisor
       import_category(ta_url + next_page) if next_page
     end
 
-    def import_visited(ta_user_name, user)
-      Selenium::WebDriver::PhantomJS.path = Phantomjs.path
-      browser = Watir::Browser.new(:phantomjs)
-      browser.goto(ta_url + '/members/' + ta_user_name)
+    def visited(user_name)
+      browser = browser_init
+      browser.goto(user_page_url(user_name))
+      @attractions = []
 
       loop do
         page = Nokogiri::HTML(browser.html)
-        page.css('.cs-review-location').map do |a|
-          attraction = Attraction.where(
-                        link: a.css('a').map {
-                            |link| ta_url + link['href']
-                          }).first_or_initialize
-          attraction.name = a.text if attraction.name.nil?
-          attraction.save
 
-          attraction.statuses.create(visited: true, user: user)
-        
-          attraction.download_location
+        page.css('.cs-review-location').map do |a|
+          attraction = {}
+          attraction[:link] = ta_url + a.css('a').first['href']
+          attraction[:name] = a.text
+          @attractions << attraction
         end
 
-        
         browser.button(text: 'Następne').click
-        break if page.css('#cs-paginate-next').first.attr('class') == 'disabled'
+        return @attractions if last_page?(page)
       end
     end
 
     def location_prioperties(attraction_html)
-      properties = Hash.new
-      category = attraction_html.css('.p13n_reasoning_v2 a').first ? category(attraction_html.css('.p13n_reasoning_v2 a').first['href']) : ''
-      properties = {
+      {
         name: attraction_html.css('.property_title a').text,
         link: attraction_html.css('.property_title a').map { |link| ta_url + link['href'] }.first,
         stars: stars(attraction_html),
         reviews: reviews(attraction_html),
-        category: category }
+        category: category(attraction_html.css('.p13n_reasoning_v2 a').first['href'])
+      }
     end
 
     def stars(attraction_html)
       attraction_stars = attraction_html.css('.rate_no img').map { |i| i['alt'] }.first
-      /^\S{1,3}/.match(attraction_stars).to_s.gsub(',', '.').to_f
+      /^\S{1,3}/.match(attraction_stars).to_s.tr(',', '.').to_f
     end
 
     def reviews(attraction_html)
       text = attraction_html.css('.more a').text.delete(' ')
-       /(\d+)/.match(text).to_s.to_i
+      /(\d+)/.match(text).to_s.to_i
     end
 
     def category(link)
@@ -136,6 +130,37 @@ class Tripadvisor
 
     def ta_url
       'https://pl.tripadvisor.com'
+    end
+
+    def localization(link)
+      parse_page = Nokogiri::HTML(open(link))
+
+      localization = {}
+      parse_page.css('.breadcrumb_link').each do |breadcrump|
+        bc = breadcrump.attr('onclick')
+        local_type = /(Continent|Country|Region|Province|Municipality|City|IslandGroup|Island)/.match(bc).to_s
+        next if local_type.empty?
+        local_type = local_type.underscore.to_sym
+        localization[local_type] = breadcrump.css('span').text
+      end
+
+      cont = parse_page.css('.mapContainer').first
+
+      coordinates = cont ? { latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng') } : {}
+      localization.merge(coordinates)
+    end
+
+    def browser_init
+      Selenium::WebDriver::PhantomJS.path = Phantomjs.path
+      Watir::Browser.new(:phantomjs)
+    end
+
+    def last_page?(page)
+      page.css('#cs-paginate-next').first.attr('class') == 'disabled'
+    end
+
+    def user_page_url(user_name)
+      ta_url + '/members/' + user_name
     end
   end
 end
