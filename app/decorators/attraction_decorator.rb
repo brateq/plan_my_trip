@@ -6,6 +6,7 @@ class AttractionDecorator < Draper::Decorator
     next_region_type = next_type(type)
     object.uniq.pluck(next_region_type).each do |current_region|
       locations = object.where(next_region_type => current_region)
+
       attractions = locations.count
       visited = locations.visited.count
       percent = visited.zero? ? nil : h.number_to_percentage(visited.to_f / attractions.to_f * 100)
@@ -18,12 +19,6 @@ class AttractionDecorator < Draper::Decorator
     end
 
     statistics
-  end
-
-  def next_type(current_type)
-    types = %w(continent country region province municipality city island_group island)
-    index = types.index(current_type)
-    types[index + 1]
   end
 
   def map_details

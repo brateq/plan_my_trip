@@ -24,7 +24,7 @@ class Attraction < ActiveRecord::Base
 
   def download_location
     return false if latitude
-    update(Tripadvisor.localization)
+    update(Tripadvisor.localization(link))
   end
 
   def self.import_visited(ta_user_name, user)
@@ -35,5 +35,11 @@ class Attraction < ActiveRecord::Base
 
       attraction.statuses.create(visited: true, user: user)
     end
+  end
+
+  def self.next_type(current_type)
+    types = %w(continent country region province municipality city island_group island)
+    index = types.index(current_type)
+    types[index + 1]
   end
 end

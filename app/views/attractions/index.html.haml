@@ -2,7 +2,7 @@
   = f.text_field :url
 
 %ul
-  - @attractions.stats(params[:type], params[:name]).each do |region, stats|
+  - @attractions.stats(params[:type]).each do |region, stats|
     %li
-      = link_to region, attractions_path(type: params[:type], name: region)
+      = link_to region, attractions_path(type: Attraction.next_type(params[:type]), name: region)
       = "#{stats[:attractions]} / #{stats[:visited]} = #{stats[:percent]}"
