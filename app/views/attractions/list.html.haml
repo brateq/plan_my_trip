@@ -36,6 +36,8 @@
           %td= link_to 'Destroy', attraction, method: :delete, remote: true
           %td= link_to 'Must see', must_see_attraction_path(attraction), method: :post, remote: true
           %td= link_to 'Visited', visited_attraction_path(attraction), method: :post, remote: true
+          %td= link_to 'Google', google_data_attraction_path(attraction)
+
 
           %td= attraction.stars
           %td= attraction.reviews

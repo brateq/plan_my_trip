@@ -10,6 +10,10 @@ class Attraction < ActiveRecord::Base
   scope :want_to_visit, -> { where(status: ['must see', 'later', nil]) }
   scope :must_see, -> { where(status: 'must see') }
 
+  def to_s
+    name
+  end
+
   def self.to_csv
     attributes = %w(name latitude longitude link)
 

@@ -1,0 +1,14 @@
+= link_to 'back', :back
+- if @google_locactions
+  - @google_locactions.each do |location|
+    %p= location['formatted_address']
+    %p= google_attraction_photo(location)
+- else
+  Ehh
+
+#map
+
+%script{:src => "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"}
+  :cdata
+%script{:async => "", :defer => "defer", :src => "https://maps.googleapis.com/maps/api/js?key=#{ENV['gmaps_api_token']}&callback=initMap"}
+  :cdata

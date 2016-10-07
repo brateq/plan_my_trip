@@ -1,5 +1,5 @@
 class AttractionsController < ApplicationController
-  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see, :visited]
+  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see, :visited, :google_data]
 
   def index
     params[:type] = 'continent' if params[:type].nil?
@@ -81,6 +81,10 @@ class AttractionsController < ApplicationController
     Attraction.where(visited: false).destroy_all
 
     redirect_to :root
+  end
+
+  def google_data
+    @google_locactions = nil # GooglePlaces.find_place(@attraction.to_s)
   end
 
   private
