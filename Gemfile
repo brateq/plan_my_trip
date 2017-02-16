@@ -5,11 +5,9 @@ gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
 gem 'draper', github: 'audionerd/draper', branch: 'rails5'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
-gem 'json', git: 'https://github.com/flori/json'
 gem 'pg', '~> 0.15'
 gem 'rails', '>= 5.0.1'
 gem 'ransack'
-gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sidekiq'
 gem 'watir'
 
