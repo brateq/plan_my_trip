@@ -1,6 +1,6 @@
 class Attraction < ActiveRecord::Base
   has_many :statuses
-  has_and_belongs_to_many :users, through: :statuses
+  has_many :users, through: :statuses
 
   validates :name, presence: true
   validates :link, uniqueness: true
