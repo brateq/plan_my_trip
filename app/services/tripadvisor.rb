@@ -6,8 +6,7 @@ class Tripadvisor
     def import(link)
       return import_category(link) unless category(link).nil?
 
-      categories.each do |category_number, name|
-        puts name
+      categories.each do |category_number, _name|
         category_link = link.gsub('Activities-', "Activities-c#{category_number}-")
         import_category(category_link)
       end
@@ -33,7 +32,6 @@ class Tripadvisor
       end
 
       next_page = parse_page.css('.sprite-pageNext').first['href']
-      puts 'Current page: ' + link
       return if next_page.empty?
 
       import_from_city_list(ta_url + next_page) if next_page

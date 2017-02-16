@@ -1,44 +1,52 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+# basic rails gems
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
-
-gem 'pg', '~> 0.15'
-
-gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
-gem 'haml-rails'
-
-gem 'jquery-rails'
-gem 'turbolinks'
+gem 'draper', github: 'audionerd/draper', branch: 'rails5'
+gem 'figaro'
 gem 'jbuilder', '~> 2.0'
+gem 'json', git: 'https://github.com/flori/json'
+gem 'pg', '~> 0.15'
+gem 'rails', '>= 5.0.1'
+gem 'ransack'
 gem 'sdoc', '~> 0.4.0', group: :doc
-
-gem 'httparty'
-gem 'nokogiri'
+gem 'sidekiq'
 gem 'watir'
-gem 'poltergeist'
-gem 'phantomjs', require: 'phantomjs/poltergeist'
+
+# maps
 gem 'gmaps4rails'
 
-gem 'figaro'
-gem 'draper', github: 'audionerd/draper', branch: 'rails5'
-gem 'sidekiq'
-gem 'seed_dump'
-gem 'ransack'
+# front-end
+gem 'coffee-rails', '~> 4.1.0'
+gem 'haml-rails'
+gem 'jquery-rails'
+gem 'sass-rails', '~> 5.0'
+gem 'turbolinks'
+gem 'uglifier', '>= 1.3.0'
 
-# Users and privilages
+# import attractions
+gem 'httparty'
+gem 'nokogiri'
+gem 'phantomjs', require: 'phantomjs/poltergeist'
+gem 'poltergeist'
+
+# users and privilages
 gem 'devise'
 
+# deployment
+gem 'capistrano', '~> 3.7', '>= 3.7.1'
+gem 'capistrano-passenger', '~> 0.2.0'
+gem 'capistrano-rails', '~> 1.2'
+gem 'capistrano-rbenv', '~> 2.1'
+
 group :development, :test do
-  gem 'rspec-rails', '~> 3.5'
   gem 'pry'
   gem 'pry-rails'
+  gem 'rspec-rails', '~> 3.5'
 end
 
 group :development do
-  gem 'spring'
-  gem 'rubocop', require: false
   gem 'bullet'
+  gem 'rubocop', require: false
+  gem 'spring'
 end

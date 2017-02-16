@@ -24,7 +24,7 @@ default: &default
 
 development:
   <<: *default
-  database: make_a_trip_development
+  database: plan_a_trip_development
   password: MotylaNoga
 
   # The specified database role being used to connect to postgres.
@@ -83,6 +83,6 @@ test:
 #
 production:
   <<: *default
-  database: make_a_trip_production
-  username: make_a_trip
+  database: plan_a_trip_production
+  username: deploy
   password: <%= ENV['MAKE_A_TRIP_DATABASE_PASSWORD'] %>
