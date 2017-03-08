@@ -97,6 +97,8 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.7.0)
+    factory_girl (4.8.0)
+      activesupport (>= 3.0.0)
     ffi (1.9.14)
     figaro (1.1.1)
       thor (~> 0.14)
@@ -298,6 +300,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   devise
   draper!
+  factory_girl
   figaro
   gmaps4rails
   haml-rails
@@ -324,4 +327,4 @@ DEPENDENCIES
   watir
 
 BUNDLED WITH
-   1.13.1
+   1.13.6
