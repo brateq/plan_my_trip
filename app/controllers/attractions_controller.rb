@@ -1,20 +1,8 @@
 class AttractionsController < ApplicationController
-  before_action :set_attraction, only: [:show, :edit, :update, :destroy, :must_see, :visited]
+  before_action :set_attraction, only: %i[show edit update destroy must_see visited]
 
   def index
-    params[:type] = 'continent' if params[:type].nil?
-    params[:name] = 'Europa' if params[:name].nil?
-    attractions = Attraction.where(params[:type] => params[:name])
-
-    @attractions = AttractionDecorator.decorate(attractions)
-  end
-
-  def list
-    @q = Attraction.where(country: 'Polska')
-                   .where('stars >= 4', 4)
-                   .where('reviews >= ?', 0)
-                   .ransack(params[:q])
-
+    @q = Attraction.ransack(params[:q])
     @attractions = @q.result(distinct: true)
     @attractions = AttractionDecorator.decorate(@attractions)
 
@@ -23,6 +11,14 @@ class AttractionsController < ApplicationController
       format.json
       format.csv { send_data @attractions.to_csv }
     end
+  end
+
+  def list
+    params[:type] = 'continent' if params[:type].nil?
+    params[:name] = 'Europa' if params[:name].nil?
+    attractions = Attraction.where(params[:type] => params[:name])
+
+    @attractions = AttractionDecorator.decorate(attractions)
   end
 
   def new
@@ -53,6 +49,13 @@ class AttractionsController < ApplicationController
     end
   end
 
+  def download_locations
+    @attractions = Attraction.ransack(params[:q]).result(distinct: true)
+    @attractions.each(&:download_location)
+
+    redirect_to :root
+  end
+
   def must_see
     @attraction.update(status: 'must see')
   end
@@ -73,7 +76,7 @@ class AttractionsController < ApplicationController
     url = params['ta_url']['url']
     Tripadvisor.delay.import(url)
 
-    redirect_to :root, notice: 'Import done'
+    redirect_to :root, notice: 'Import started'
   end
 
   def reset

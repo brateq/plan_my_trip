@@ -12,6 +12,7 @@ gem 'sidekiq'
 gem 'watir'
 
 # maps
+gem 'geocoder'
 gem 'gmaps4rails'
 
 # front-end

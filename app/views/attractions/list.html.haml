@@ -1,47 +1,12 @@
-%script{:src => "//maps.google.com/maps/api/js?v=3.23&key=#{ENV['gmaps_api_token']}"}
-%script{:src => "//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"}
-%script{:src => '//cdn.rawgit.com/googlemaps/js-rich-marker/gh-pages/src/richmarker-compiled.js'}
-%script{:src => "//cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js", :type => "text/javascript"}
 
-%p#notice= notice
+
+= link_to 'Attraction list', list_attractions_path
+
 = form_for :ta_url, url: import_attractions_path, method: :post do |f|
   = f.text_field :url
 
-  %div{:style => "width: 800px;"}
-    #map{:style => "width: 1250px; height: 600px;"}
-  :javascript
-    buildMap(#{raw @attractions.map_details});
-
-  = link_to 'Download attractions', list_attractions_path(format: 'csv')
-
-  %table
-    %thead
-      %tr
-        %th= sort_link(@q, :name)
-        %th
-        %th
-        %th
-        %th= sort_link(@q, :stars)
-        %th= sort_link(@q, :reviews)
-        %th= sort_link(@q, :status)
-        %th= sort_link(@q, :category)
-        %td= sort_link(@q, :region)
-        %td= sort_link(@q, :city)
-        %th= sort_link(@q, :latitude)
-        %th
-    %tbody
-      - @attractions.each do |attraction|
-        %tr
-          %td= link_to attraction.name, attraction.link, :target => "_blank"
-          %td= link_to 'Destroy', attraction, method: :delete, remote: true
-          %td= link_to 'Must see', must_see_attraction_path(attraction), method: :post, remote: true
-          %td= link_to 'Visited', visited_attraction_path(attraction), method: :post, remote: true
-
-          %td= attraction.stars
-          %td= attraction.reviews
-          %td= attraction.statuses.find_by(user: current_user).try(:wonna_go)
-          %td= attraction.category
-          %td= attraction.region
-          %td= attraction.city
-          %td= attraction.latitude
-          %td= link_to 'Edit', edit_attraction_path(attraction)
+%ul
+  - @attractions.stats(params[:type]).each do |region, stats|
+    %li
+      = link_to region, attractions_path(type: Attraction.next_type(params[:type]), name: region)
+      = "#{stats[:attractions]} / #{stats[:visited]} = #{stats[:percent]}"
