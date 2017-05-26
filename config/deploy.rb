@@ -31,3 +31,12 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+namespace :logs do
+  desc 'tail rails logs'
+  task :tail do
+    on roles(:app) do
+      execute "tail -f #{current_path}/log/production.log -n 200"
+    end
+  end
+end
