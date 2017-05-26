@@ -8,6 +8,9 @@ AllCops:
     - 'script/**/*'
     - 'bin/*'
 
+Rails:
+  Enabled: true
+
 Style/Encoding:
   Enabled: false
 
