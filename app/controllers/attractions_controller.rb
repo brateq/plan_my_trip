@@ -65,9 +65,10 @@ class AttractionsController < ApplicationController
   end
 
   def destroy
-    @attraction.update(status: 'not interested')
+    @attraction.destroy #update(status: 'not interested')
+
     respond_to do |format|
-      format.html { redirect_to attractions_list_url, notice: 'Attraction status changed to not interested.' }
+      format.html { redirect_to attractions_url, notice: 'Attraction status changed to not interested.' }
       format.json
     end
   end
