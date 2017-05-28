@@ -14,7 +14,8 @@ class Attraction < ApplicationRecord
   reverse_geocoded_by :latitude, :longitude do |obj, results|
     if geo = results.first
       obj.city    = geo.city
-      obj.country = geo.country_code
+      obj.country = geo.country
+      obj.region  = geo.state
     end
   end
 

@@ -11,6 +11,13 @@
   %br
   = f.label 'Minimum reviews'
   = f.search_field :reviews_gteq
+  %br
+  = f.label 'Country'
+  = f.search_field :country_cont
+  %br
+  = f.label 'Region or state'
+  = f.search_field :region_cont
+
 
   %br= f.submit
 
