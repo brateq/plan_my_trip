@@ -4,7 +4,7 @@ class AttractionsController < ApplicationController
 
   def index
     @q = Attraction.includes(:statuses)
-                    .where(statuses: { user_id: [current_user.id, nil], wanna_go: nil})
+                    .where(statuses: { user_id: [current_user.id, nil], wanna_go: [nil, 3]})
                     .ransack(params[:q])
     @attractions = @q.result(distinct: true)
     @attractions = AttractionDecorator.decorate(@attractions)
@@ -60,21 +60,21 @@ class AttractionsController < ApplicationController
   end
 
   def must_see
-    @attraction.update(status: 'must see')
+    current_user.statuses.create(attraction: @attraction, wanna_go: 3)
+
+    redirect_back(fallback_location: root_path)
   end
 
   def visited
-    @attraction.update(visited: true)
+    current_user.statuses.create(attraction: @attraction, visited: true)
+
+    redirect_back(fallback_location: root_path)
   end
 
   def destroy
     current_user.statuses.create(attraction: @attraction, wanna_go: 0)
 
     redirect_back(fallback_location: root_path)
-    # respond_to do |format|
-    #   format.html { , notice: 'Attraction status changed to not interested.' }
-    #   format.json
-    # end
   end
 
   def import

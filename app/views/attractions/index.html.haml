@@ -60,7 +60,7 @@
 
           %td= attraction.stars
           %td= attraction.reviews
-          %td= attraction.statuses.find_by(user: current_user).try(:wonna_go)
+          %td= attraction.statuses.find_by(user: current_user).try(:wanna_go)
           %td= attraction.category
           %td= attraction.region
           %td= attraction.city
