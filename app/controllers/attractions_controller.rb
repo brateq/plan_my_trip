@@ -1,8 +1,11 @@
 class AttractionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_attraction, only: %i[show edit update destroy must_see visited]
 
   def index
-    @q = Attraction.ransack(params[:q])
+    @q = Attraction.includes(:statuses)
+                    .where(statuses: { user_id: [current_user.id, nil], wanna_go: nil})
+                    .ransack(params[:q])
     @attractions = @q.result(distinct: true)
     @attractions = AttractionDecorator.decorate(@attractions)
 
@@ -65,12 +68,13 @@ class AttractionsController < ApplicationController
   end
 
   def destroy
-    @attraction.destroy #update(status: 'not interested')
+    current_user.statuses.create(attraction: @attraction, wanna_go: 0)
 
-    respond_to do |format|
-      format.html { redirect_to attractions_url, notice: 'Attraction status changed to not interested.' }
-      format.json
-    end
+    redirect_back(fallback_location: root_path)
+    # respond_to do |format|
+    #   format.html { , notice: 'Attraction status changed to not interested.' }
+    #   format.json
+    # end
   end
 
   def import
