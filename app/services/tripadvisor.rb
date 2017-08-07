@@ -144,7 +144,7 @@ class Tripadvisor
         localization[local_type] = breadcrump.css('span').text
       end
 
-      cont = parse_page.css('.mapContainer').first
+      cont = parse_page.css('.poiEntry').first
 
       coordinates = cont ? { latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng') } : {}
       localization.merge(coordinates)
