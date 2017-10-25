@@ -53,14 +53,14 @@ class Tripadvisor
     def import_category(link)
       page = HTTParty.get(link)
       parse_page = Nokogiri::HTML(page)
-
       ActiveRecord::Base.transaction do
         parse_page.css('.attraction_element').map do |a|
           attraction = Attraction.create(location_prioperties(a))
-          attraction.download_location
+          # attraction.download_location if attraction.errors.empty?
         end
       end
-
+      puts Attraction.count
+      puts link
       next_page = parse_page.css('.next').map { |a| a['href'] }.first
       import_category(ta_url + next_page) if next_page
     end
@@ -79,30 +79,32 @@ class Tripadvisor
           attraction[:name] = a.text
           @attractions << attraction
         end
-
-        browser.button(text: 'Następne').click
+        browser.button(text: 'Next').click
         return @attractions if last_page?(page)
       end
     end
 
     def location_prioperties(attraction_html)
       {
-        name: attraction_html.css('.property_title a').text,
-        link: attraction_html.css('.property_title a').map { |link| ta_url + link['href'] }.first,
+        name: attraction_html.css('.listing_title a').text,
+        link: ta_url + attraction_html.css('.listing_title a').first['href'],
         stars: stars(attraction_html),
         reviews: reviews(attraction_html),
-        category: category(attraction_html.css('.p13n_reasoning_v2 a').first['href'])
+        category: attraction_html.css('.p13n_reasoning_v2 span').text
       }
     end
 
     def stars(attraction_html)
-      attraction_stars = attraction_html.css('.rate_no img').map { |i| i['alt'] }.first
-      /^\S{1,3}/.match(attraction_stars).to_s.tr(',', '.').to_f
+      rating = attraction_html.css('.ui_bubble_rating')
+      return 0 if rating.empty?
+      rating = rating.attr('alt').value
+      rating.slice!(' of 5 bubbles')
+      rating.to_f
     end
 
     def reviews(attraction_html)
-      text = attraction_html.css('.more a').text.delete(' ')
-      /(\d+)/.match(text).to_s.to_i
+      text = attraction_html.css('.more a').text
+      /((\d+)[,]*(\d+)*)/.match(text).to_s.delete(',').to_i
     end
 
     def category(link)
@@ -127,7 +129,7 @@ class Tripadvisor
     end
 
     def ta_url
-      'https://pl.tripadvisor.com'
+      'https://tripadvisor.com'
     end
 
     def localization(link)
@@ -142,7 +144,7 @@ class Tripadvisor
         localization[local_type] = breadcrump.css('span').text
       end
 
-      cont = parse_page.css('.mapContainer').first
+      cont = parse_page.css('.poiEntry').first
 
       coordinates = cont ? { latitude: cont.attr('data-lat'), longitude: cont.attr('data-lng') } : {}
       localization.merge(coordinates)

@@ -6,12 +6,14 @@ gem 'draper', github: 'audionerd/draper', branch: 'rails5'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
 gem 'pg', '~> 0.15'
+gem 'puma'
 gem 'rails', '>= 5.0.1'
 gem 'ransack'
 gem 'sidekiq'
 gem 'watir'
 
 # maps
+gem 'geocoder'
 gem 'gmaps4rails'
 
 # front-end

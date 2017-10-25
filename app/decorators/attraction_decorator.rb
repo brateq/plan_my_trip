@@ -27,7 +27,7 @@ class AttractionDecorator < Draper::Decorator
       marker.json(id: attraction.id)
       marker.title attraction.name
       marker.infowindow "<a href='#{attraction.link}' target='_blank'>#{attraction.name}</a>
-                         <p><a href='#{attraction.id}' data-method='delete' data-remote='true'>Destroy</a></p>"
+                         <p><a href='/attractions/#{attraction.id}' data-method='delete'>Destroy</a></p>"
       marker.lat attraction.latitude
       marker.lng attraction.longitude
     end

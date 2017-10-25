@@ -5,7 +5,7 @@ set :application, "PlanMyTrip"
 set :repo_url, "https://github.com/brateq/plan_my_trip"
 
 # Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+ask :branch, (proc { `git rev-parse --abbrev-ref HEAD`.chomp })
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/home/brateq/plan_my_trip'
@@ -21,7 +21,7 @@ set :deploy_to, '/home/brateq/plan_my_trip'
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/secrets.yml"
+append :linked_files, "config/database.yml", "config/secrets.yml", "config/application.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor/bundle", "public/uploads"
@@ -31,3 +31,12 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+namespace :logs do
+  desc 'tail rails logs'
+  task :tail do
+    on roles(:app) do
+      execute "tail -f #{current_path}/log/production.log -n 200"
+    end
+  end
+end

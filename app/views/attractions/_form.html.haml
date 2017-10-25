@@ -15,6 +15,8 @@
     = f.label :link
     %br/
     = f.text_field :link
+
+  Localization
   .field
     = f.label :latitude
     %br/
@@ -23,5 +25,15 @@
     = f.label :longitude
     %br/
     = f.text_field :longitude
+
+  .field
+    Country:
+    = @attraction.country
+  .field
+    Region:
+    = @attraction.region
+  .field
+    City:
+    = @attraction.city
   .actions
     = f.submit
