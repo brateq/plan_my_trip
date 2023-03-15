@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/audionerd/draper.git
+  remote: https://github.com/audionerd/draper.git
   revision: e816e0e5876b76c648c0928f1c3f2aa2c7a3d1f2
   branch: rails5
   specs:
@@ -10,12 +10,12 @@ GIT
       request_store (~> 1.0)
 
 GIT
-  remote: git://github.com/rails/activemodel-serializers-xml.git
-  revision: dd9c0acf26aab111ebc647cd8deb99ebc6946531
+  remote: https://github.com/rails/activemodel-serializers-xml.git
+  revision: 32841fdf59c2297436177a8e6d84f4f17e048005
   specs:
-    activemodel-serializers-xml (1.0.1)
-      activemodel (> 5.x)
-      activesupport (> 5.x)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (>= 5.0.0.a)
+      activesupport (>= 5.0.0.a)
       builder (~> 3.1)
 
 GEM
@@ -184,7 +184,7 @@ GEM
       pry (>= 0.9.10)
     public_suffix (2.0.5)
     puma (3.8.2)
-    rack (2.0.1)
+    rack (2.2.6.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -221,7 +221,8 @@ GEM
       i18n
       polyamorous (~> 1.3)
     redis (3.3.3)
-    request_store (1.3.2)
+    request_store (1.5.1)
+      rack (>= 1.4)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
     rspec-core (3.5.4)
